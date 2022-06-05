@@ -123,6 +123,19 @@ class OneInchExchange:
         result = self._get(url)
         return result
 
+    def do_swap_new(self, from_token_symbol:str, to_token_symbol:str, 
+        amount:int, from_address:str, slippage:int):
+        url = 'https://api.1inch.io/{}/{}/swap'.format(
+            self.version, self.chain_id)
+        url = url + "?fromTokenAddress={}&toTokenAddress={}&amount={}".format(
+            self.tokens[from_token_symbol]['address'], 
+            self.tokens[to_token_symbol]['address'], 
+            amount)
+        url = url + '&fromAddress={}&slippage={}&gasPrice'.format(
+            from_address, slippage)
+        result = self._get(url)
+        return result
+
     def convert_amount_to_decimal(self, token_symbol, amount):
         decimal = self.tokens[token_symbol]['decimals']
         return Decimal(amount) / Decimal(10**decimal)
