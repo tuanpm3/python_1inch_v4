@@ -124,15 +124,15 @@ class OneInchExchange:
         return result
 
     def do_swap_new(self, from_token_symbol:str, to_token_symbol:str, 
-        amount:int, from_address:str, slippage:int):
+        amount:int, from_address:str, slippage:int, complexity=2):
         url = 'https://api.1inch.io/{}/{}/swap'.format(
             self.version, self.chain_id)
         url = url + "?fromTokenAddress={}&toTokenAddress={}&amount={}".format(
             self.tokens[from_token_symbol]['address'], 
             self.tokens[to_token_symbol]['address'], 
             amount)
-        url = url + '&fromAddress={}&slippage={}&gasPrice'.format(
-            from_address, slippage)
+        url = url + '&fromAddress={}&slippage={}&complexityLevel={}'.format(
+            from_address, slippage, complexity)
         result = self._get(url)
         return result
 
