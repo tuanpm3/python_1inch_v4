@@ -124,7 +124,14 @@ class OneInchExchange:
         return result
 
     def do_swap_new(self, from_token_symbol:str, to_token_symbol:str, 
-        amount:int, from_address:str, slippage:int, complexity=2, parts=50, mainRouteParts=10):
+        amount:int, from_address:str, slippage:int, complexity=2, parts=50, mainRouteParts=10,
+        disableEstimate=False):
+        #########
+        if disableEstimate:
+            disableEstimateStr = 'true'
+        else:
+            disableEstimateStr = 'false'
+        #########
         url = 'https://api.1inch.io/{}/{}/swap'.format(
             self.version, self.chain_id)
         url = url + "?fromTokenAddress={}&toTokenAddress={}&amount={}".format(
@@ -134,6 +141,7 @@ class OneInchExchange:
         url = url + '&fromAddress={}&slippage={}&complexityLevel={}'.format(
             from_address, slippage, complexity)
         url = url + '&parts={}&mainRouteParts={}'.format(parts, mainRouteParts)
+        url = url + '&disableEstimate={}&allowPartialFill=false'.format(disableEstimateStr)
         result = self._get(url)
         return result
 
