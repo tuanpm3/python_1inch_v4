@@ -35,7 +35,7 @@ class OneInchExchange:
 
     def __init__(self, address, chain='ethereum'):
         self.address = address
-        self.version = 'v4.0'
+        self.version = 'v5.0'
         self.chain_id = self.chains[chain]
         self.chain = chain
         # self.get_tokens()
