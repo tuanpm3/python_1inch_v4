@@ -110,6 +110,18 @@ class OneInchExchange:
         return result
 
 
+    def do_swap(self, from_token_symbol:str, to_token_symbol:str,
+        amount:int, from_address:str, slippage:int, complexity=2, parts=50, mainRouteParts=10):
+        url = '{}/{}/{}/quote'.format(
+            self.base_url, self.version, self.chain_id)
+        url = url + "?fromTokenAddress={}&toTokenAddress={}&amount={}".format(
+            self.tokens[from_token_symbol]['address'], 
+            self.tokens[to_token_symbol]['address'], 
+            amount)
+        url = url + '&fromAddress={}&slippage={}'.format(from_address, slippage)
+        result = self._get(url)
+        return result
+
     def do_quote(self, from_token_symbol:str, to_token_symbol:str,
         amount:int, from_address:str, slippage:int, complexity=2, parts=50, mainRouteParts=10):
         url = '{}/{}/{}/quote'.format(
