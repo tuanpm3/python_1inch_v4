@@ -4,7 +4,8 @@ from decimal import Decimal
 
 class OneInchExchange:
 
-    base_url = 'https://api.1inch.exchange'
+    # base_url = 'https://api.1inch.exchange'
+    base_url = 'https://api.1inch.io'
 
     chains = dict(
         ethereum = '1',
