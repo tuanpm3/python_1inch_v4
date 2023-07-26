@@ -5,7 +5,7 @@ from decimal import Decimal
 class OneInchExchange:
 
     # base_url = 'https://api.1inch.exchange'
-    base_url = 'https://api.1inch.io'
+    base_url = 'https://api.1inch.dev/swap'
 
     chains = dict(
         ethereum = '1',
@@ -36,9 +36,10 @@ class OneInchExchange:
 
     def __init__(self, address, chain='ethereum'):
         self.address = address
-        self.version = 'v5.0'
+        self.version = 'v5.2'
         self.chain_id = self.chains[chain]
         self.chain = chain
+        self.api_key = 'Q7Ab1mEJh3kdlIE5WOyLRY0fpc0R5U2Y'
         # self.get_tokens()
         # self.get_protocols()
         # self.get_protocols_images()
@@ -69,7 +70,8 @@ class OneInchExchange:
     def get_tokens(self):
         url = '{}/{}/{}/tokens'.format(
             self.base_url, self.version, self.chain_id)
-        result = self._get(url)
+        headers = { "Content-Type": "application/json", "Authorization": "Bearer {}".format(self.api_key) }
+        result = self._get(url, headers=headers)
         if not result.__contains__('tokens'):
             return result
         for key in result['tokens']:
@@ -127,12 +129,13 @@ class OneInchExchange:
         amount:int, from_address:str, slippage:int, complexity=2, parts=50, mainRouteParts=10):
         url = '{}/{}/{}/quote'.format(
             self.base_url, self.version, self.chain_id)
-        url = url + "?fromTokenAddress={}&toTokenAddress={}&amount={}".format(
+        url = url + "?src={}&dst={}&amount={}".format(
             self.tokens[from_token_symbol]['address'], 
             self.tokens[to_token_symbol]['address'], 
             amount)
-        url = url + '&fromAddress={}&slippage={}'.format(from_address, slippage)
-        result = self._get(url)
+        # url = url + '&fromAddress={}&slippage={}'.format(from_address, slippage)
+        headers = { "Content-Type": "application/json", "Authorization": "Bearer {}".format(self.api_key) }
+        result = self._get(url, headers=headers)
         return result
 
     def do_swap_new(self, from_token_symbol:str, to_token_symbol:str, 
@@ -144,17 +147,18 @@ class OneInchExchange:
         else:
             disableEstimateStr = 'false'
         #########
-        url = 'https://api.1inch.io/{}/{}/swap'.format(
-            self.version, self.chain_id)
-        url = url + "?fromTokenAddress={}&toTokenAddress={}&amount={}".format(
+        url = '{}/{}/{}/swap'.format(
+            self.base_url, self.version, self.chain_id)
+        url = url + "?src={}&dst={}&amount={}".format(
             self.tokens[from_token_symbol]['address'], 
             self.tokens[to_token_symbol]['address'], 
             amount)
-        url = url + '&fromAddress={}&slippage={}&complexityLevel={}'.format(
+        url = url + '&from={}&slippage={}&complexityLevel={}'.format(
             from_address, slippage, complexity)
         url = url + '&parts={}&mainRouteParts={}'.format(parts, mainRouteParts)
         url = url + '&disableEstimate={}&allowPartialFill=false'.format(disableEstimateStr)
-        result = self._get(url)
+        headers = { "Content-Type": "application/json", "Authorization": "Bearer {}".format(self.api_key) }
+        result = self._get(url, headers=headers)
         return result
 
     def convert_amount_to_decimal(self, token_symbol, amount):
