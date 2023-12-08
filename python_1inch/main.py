@@ -39,7 +39,9 @@ class OneInchExchange:
         self.version = 'v5.2'
         self.chain_id = self.chains[chain]
         self.chain = chain
-        self.api_key = 'Q7Ab1mEJh3kdlIE5WOyLRY0fpc0R5U2Y'
+        self.api_key = ''
+        self.api_key_chain = None
+        self.api_key_index = 0
         # self.get_tokens()
         # self.get_protocols()
         # self.get_protocols_images()
@@ -56,7 +58,22 @@ class OneInchExchange:
             data = None
         return data
 
-
+    def set_api_keys(self, keys):        
+        if len(keys) > 0:
+            self.api_key_chain = keys
+            self.api_key_index = 0
+            self.api_key = keys[0]
+        else:
+            print("set_api_keys(): Invaid keys.")
+        print('set_api_keys(): api_key = {}'.format(self.api_key))
+            
+    def rotate_api_keys(self):
+        self.api_key_index += 1
+        if self.api_key_index >= len(self.api_key_chain):
+            self.api_key_index = 0
+        self.api_key = self.api_key_chain[self.api_key_index]
+        print('rotate_api_keys(): api_key = {}'.format(self.api_key))
+        
     def health_check(self):
         url = '{}/56/{}/healthcheck'.format(
             self.base_url, self.chain_id)
